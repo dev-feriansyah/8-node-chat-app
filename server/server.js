@@ -14,14 +14,20 @@ app.use(express.static(path.join(__dirname, './../public')));
 io.on('connection', (socket) => {
   console.log('New user connect to server');
 
-  socket.emit('newMessage', {
-    from: 'message@example.com',
-    text: 'Some message here!',
-    createdAt: 123
-  });
+  // Sending event in 1 connection
+  // socket.emit('newMessage', {
+  //   from: 'message@example.com',
+  //   text: 'Some message here!',
+  //   createdAt: 123
+  // });
 
   socket.on('createMessage', (message) => {
-    console.log('Create new message', message);
+    // Sending event to all connection (broadcast)
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
