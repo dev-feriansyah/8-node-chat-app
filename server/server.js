@@ -3,6 +3,8 @@ const http     = require('http');
 const express  = require('express');
 const socketIO = require('socket.io');
 
+const { generateMessage } = require('./utils/message');
+
 const app     = express();
 const server  = http.createServer(app);
 const io      = socketIO(server);
@@ -21,13 +23,14 @@ io.on('connection', (socket) => {
   //   createdAt: 123
   // });
 
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app!'));
+
+  // sending event to all except who send it
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined chat app!'));
+
   socket.on('createMessage', (message) => {
-    // Sending event to all connection (broadcast)
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
+    // Sending event to all connection
+    io.emit('newMessage', generateMessage(message.from, message.text));
   });
 
   socket.on('disconnect', () => {
