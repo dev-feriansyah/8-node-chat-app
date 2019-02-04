@@ -28,9 +28,10 @@ io.on('connection', (socket) => {
   // sending event to all except who send it
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user has joined chat app!'));
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     // Sending event to all connection
     io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('This is from server');
   });
 
   socket.on('disconnect', () => {
