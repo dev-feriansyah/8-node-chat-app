@@ -48,13 +48,21 @@ locationButton.addEventListener('click', function () {
   if(!navigator.geolocation) {
     return alert('Your browser not support geolocation');
   }
+
+  locationButton.setAttribute('disabled', 'disabled');
+  locationButton.textContent = 'Sending location ...';
+
   navigator.geolocation.getCurrentPosition(function(position) {
+    locationButton.removeAttribute('disabled');
+    locationButton.textContent = 'Send location';
     console.log(position);
     socket.emit('createLocation', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
   }, function () {
+    locationButton.removeAttribute('disabled');
+    locationButton.textContent = 'Send location';
     alert('Unable to fetch location');
   });
 });
