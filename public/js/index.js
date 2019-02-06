@@ -1,11 +1,28 @@
 var socket = io();
 
 // helper function for render message
-var loadMessage = function(data) {
+var loadMessage = function (data) {
   var messages = document.querySelector('#messages');
   var template = document.querySelector('#message-template').innerHTML;
   var html     = Mustache.render(template, data);
   messages.insertAdjacentHTML('beforeend', html);
+};
+
+// function for autoscrolling
+var scrollToBottom = function () {
+  // Selectors
+  var messages    = document.querySelector('#messages');
+  var newMessage  = messages.children[messages.children.length - 1];
+  // Height
+  var clientHeight = messages.clientHeight;
+  var scrollTop    = messages.scrollTop;
+  var scrollHeight = messages.scrollHeight;
+  var newMessageHeight  = newMessage.offsetHeight;
+  var lastMessageHeight = (newMessage.previousElementSibling) ? newMessage.previousElementSibling.offsetHeight : 0;
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop = scrollHeight;
+  }
 };
 
 socket.on('connect', function () {
@@ -23,6 +40,7 @@ socket.on('newMessage', function (message) {
     text: message.text,
     createdAt: formattedTime
   });
+  scrollToBottom();
 });
 
 socket.on('newLocationMessage', function (message) {
@@ -32,6 +50,7 @@ socket.on('newLocationMessage', function (message) {
     url: message.url,
     createdAt: formattedTime
   });
+  scrollToBottom();
 });
 
 var messageForm = document.querySelector('#message-form');
