@@ -1,5 +1,13 @@
 var socket = io();
 
+// helper function for render message
+var loadMessage = function(data) {
+  var messages = document.querySelector('#messages');
+  var template = document.querySelector('#message-template').innerHTML;
+  var html     = Mustache.render(template, data);
+  messages.insertAdjacentHTML('beforeend', html);
+};
+
 socket.on('connect', function () {
   console.log('Connected to server');
 });
@@ -10,26 +18,20 @@ socket.on('disconnect', function () {
 
 socket.on('newMessage', function (message) {
   var formattedTime = moment(message.createdAt).format('h:mm a');
-  var messages = document.querySelector('#messages');
-  var li       = document.createElement('li');
-  var liValue  = document.createTextNode(`${message.from} ${formattedTime}: ${message.text}`);
-  li.appendChild(liValue);
-  messages.appendChild(li);
+  loadMessage({
+    from: message.from,
+    text: message.text,
+    createdAt: formattedTime
+  });
 });
 
 socket.on('newLocationMessage', function (message) {
   var formattedTime = moment(message.createdAt).format('h:mm a');
-  var messages = document.querySelector('#messages');
-  var li       = document.createElement('li');
-  var liValue  = document.createTextNode(`${message.from} ${formattedTime}: `);
-  var a        = document.createElement('a');
-  var aValue   = document.createTextNode('My current location');
-  a.setAttribute('target', '_blank');
-  a.setAttribute('href', message.url);
-  a.appendChild(aValue);
-  li.appendChild(liValue);
-  li.appendChild(a);
-  messages.appendChild(li);
+  loadMessage({
+    from: message.from,
+    url: message.url,
+    createdAt: formattedTime
+  });
 });
 
 var messageForm = document.querySelector('#message-form');

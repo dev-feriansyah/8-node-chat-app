@@ -25,10 +25,28 @@
       </form>
       <button id="send-location">Send location</button>
     </div>
-  </div>    
+  </div>
+
+  <script id="message-template" type="x-tmpl-mustache">
+    <li class="message">
+      <div class="message__title">
+        <h4>{{ from }}</h4>
+        <span>{{ createdAt }}</span>
+      </div>
+      <div class="message__body">
+        {{#text}}
+          <p>{{ text }}</p>
+        {{/text}}
+        {{#url}}
+          <p><a target="_blank" href="{{url}}">My current location</a></p>
+        {{/url}}
+      </div>
+    </li>
+  </script>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/libs/moment.min.js"></script>
+  <script src="/js/libs/mustache.min.js"></script>
   <script src="/js/index.js"></script>
 </body>
 </html>
