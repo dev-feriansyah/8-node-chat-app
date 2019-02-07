@@ -83,11 +83,9 @@ var messageForm = document.querySelector('#message-form');
 messageForm.addEventListener('submit', function (e) {
   e.preventDefault();
   socket.emit('createMessage', {
-    from: 'User',
     text: messageForm.message.value
   }, function (data) {
     messageForm.message.value = '';
-    console.log(data);
   });
 });
 
@@ -103,7 +101,6 @@ locationButton.addEventListener('click', function () {
   navigator.geolocation.getCurrentPosition(function(position) {
     locationButton.removeAttribute('disabled');
     locationButton.textContent = 'Send location';
-    console.log(position);
     socket.emit('createLocation', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude

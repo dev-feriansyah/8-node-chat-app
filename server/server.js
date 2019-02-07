@@ -36,13 +36,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('createMessage', (message, callback) => {
-    // Sending event to all connection
-    io.emit('newMessage', generateMessage(message.from, message.text));
-    callback('This is from server');
+    const user = users.getUser(socket.id);
+    if (user && isRealString(message.text)) {
+      // Sending event to private room all connection
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
+    callback();
   });
 
   socket.on('createLocation', ({latitude, longitude}) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', latitude, longitude));
+    const user = users.getUser(socket.id);
+    io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, latitude, longitude));
   });
 
   socket.on('disconnect', () => {
