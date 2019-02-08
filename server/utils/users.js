@@ -23,6 +23,10 @@ class Users {
     return this.users.find(user => user.id === id);
   }
 
+  isNameExist(name) {
+    return this.users.some(user => user.name === name);
+  }
+
   getUserList(room) {
     return this.users
       .filter(user => user.room === room)

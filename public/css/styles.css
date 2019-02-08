@@ -173,6 +173,10 @@ button:disabled {
   color: #999
 }
 
+.text-right {
+  text-align: right;
+}
+
 @media (max-width:600px) {
   * {
     font-size: 1rem

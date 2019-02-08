@@ -21,6 +21,9 @@ io.on('connection', (socket) => {
     if (!isRealString(params.name) && isRealString(params.room)) {
       return callback("Name and room are required");
     }
+    if (users.isNameExist(params.name)) {
+      return callback('Name already exist');
+    }
     socket.join(params.room) // Join to private connection socket.join('private room')
     // socket.leave(params.room) // leave private connection socket.leave('private room')
     users.removeUser(socket.id);
